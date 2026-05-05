@@ -1,6 +1,9 @@
+"use client";
+
 import Image from "next/image";
 import { CoinDetail, CoinQuote } from "@/types/coin";
-import { formatUSD, formatPercent, isPositive, cn } from "@/lib/utils";
+import { formatPercent, isPositive, cn } from "@/lib/utils";
+import { useCurrency } from "@/lib/hooks/use-currency";
 import { ChevronUp, ChevronDown, ExternalLink } from "lucide-react";
 
 interface CoinHeaderProps {
@@ -35,6 +38,7 @@ function PriceChange({
 
 export function CoinHeader({ meta, quote }: CoinHeaderProps) {
   const usd = quote.quote.USD;
+  const { formatPrice } = useCurrency();
 
   return (
     <div className="flex flex-col gap-6">
@@ -104,7 +108,7 @@ export function CoinHeader({ meta, quote }: CoinHeaderProps) {
         {/* Price */}
         <div className="sm:ml-auto text-left sm:text-right">
           <p className="text-3xl font-bold tabular-nums">
-            {formatUSD(usd.price)}
+            {formatPrice(usd.price)}
           </p>
 
           <p

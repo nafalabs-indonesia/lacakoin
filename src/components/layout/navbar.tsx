@@ -2,15 +2,17 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { TrendingUp, Star, BarChart2, Menu, X } from "lucide-react";
+import { TrendingUp, Star, BarChart2, Menu, X, PieChart } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/common/search-bar";
+import { CurrencyToggle } from "@/components/common/currency-toggle";
 
 const navLinks = [
   { href: "/", label: "Market", icon: BarChart2 },
   { href: "/trending", label: "Trending", icon: TrendingUp },
   { href: "/watchlist", label: "Watchlist", icon: Star },
+  { href: "/portfolio", label: "Portfolio", icon: PieChart   },
 ];
 
 export function Navbar() {
@@ -56,7 +58,8 @@ export function Navbar() {
           </nav>
 
           {/* Search — push ke kanan */}
-          <div className="ml-auto hidden md:block">
+          <div className="ml-auto hidden md:flex items-center gap-3">
+            <CurrencyToggle />
             <SearchBar />
           </div>
 

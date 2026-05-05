@@ -119,3 +119,27 @@ export interface SearchResult {
   slug: string;
   rank: number;
 }
+
+export type ChartRange = "1" | "7" | "30" | "90" | "365";
+
+export interface ChartPoint {
+  time: number;
+  price: number;
+}
+
+export interface PortfolioEntry {
+  coinId: number;
+  symbol: string;
+  name: string;
+  slug: string;
+  amount: number;      // jumlah koin dimiliki
+  buyPrice: number;    // harga beli dalam USD
+  addedAt: number;     // timestamp
+}
+
+export interface PortfolioStats {
+  totalValue: number;
+  totalCost: number;
+  totalPnl: number;
+  totalPnlPercent: number;
+}

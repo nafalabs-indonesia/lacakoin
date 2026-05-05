@@ -6,5 +6,6 @@ export function useListings(params: ListingsParams = {}) {
   return useQuery({
     queryKey: ["listings", params],
     queryFn: () => fetchListings(params),
+    placeholderData: (prev) => prev, // tampilkan data lama saat fetch page baru
   });
 }

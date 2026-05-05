@@ -1,7 +1,8 @@
 "use client";
 
 import { useGlobalMetrics } from "@/lib/hooks/use-global-metrics";
-import { formatLargeNumber, formatPercent, isPositive } from "@/lib/utils";
+import { formatPercent, isPositive } from "@/lib/utils";
+import { useCurrency } from "@/lib/hooks/use-currency";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, Activity, DollarSign } from "lucide-react";
 
@@ -60,6 +61,7 @@ function StatCardSkeleton() {
 
 export function MarketStats() {
   const { data, isLoading, isError } = useGlobalMetrics();
+  const { formatLarge } = useCurrency();
 
   if (isError) {
     return (
@@ -79,7 +81,7 @@ export function MarketStats() {
     );
   }
 
-  const metrics = data.data;
+  const metrics      = data.data;
   const totalMarketCap  = metrics.quote.USD.total_market_cap;
   const totalVolume     = metrics.quote.USD.total_volume_24h;
   const marketCapChange = metrics.quote.USD.total_market_cap_yesterday_percentage_change;
@@ -91,14 +93,14 @@ export function MarketStats() {
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
       <StatCard
         label="Total Market Cap"
-        value={formatLargeNumber(totalMarketCap)}
+        value={formatLarge(totalMarketCap)}
         sub={formatPercent(marketCapChange) + " vs kemarin"}
         trend={marketCapChange}
         icon={DollarSign}
       />
       <StatCard
         label="Volume 24 Jam"
-        value={formatLargeNumber(totalVolume)}
+        value={formatLarge(totalVolume)}
         sub={formatPercent(volumeChange) + " vs kemarin"}
         trend={volumeChange}
         icon={Activity}
