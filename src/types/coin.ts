@@ -143,3 +143,36 @@ export interface PortfolioStats {
   totalPnl: number;
   totalPnlPercent: number;
 }
+
+export interface FearGreedEntry {
+  value: string;
+  value_classification: string;
+  timestamp: string;
+}
+
+export interface FearGreedResponse {
+  data: FearGreedEntry[];
+}
+
+export interface NewsArticle {
+  ID: number;
+  TITLE: string;
+  URL: string;
+  IMAGE_URL: string;
+  PUBLISHED_ON: number;
+  AUTHORS: string;
+  BODY: string;
+  SENTIMENT: "POSITIVE" | "NEGATIVE" | "NEUTRAL";
+  SOURCE_DATA: {
+    NAME: string;
+    IMAGE_URL: string;
+  };
+  CATEGORY_DATA: {
+    NAME: string;
+    CATEGORY: string;
+  }[];
+}
+
+export interface NewsResponse {
+  Data: NewsArticle[];
+}

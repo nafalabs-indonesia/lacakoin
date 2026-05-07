@@ -1,0 +1,47 @@
+// Mapping CMC slug → CoinGecko slug
+// Tambahkan koin lain kalau ditemukan 404
+const CMC_TO_COINGECKO: Record<string, string> = {
+  "bnb":              "binancecoin",
+  "xrp":              "ripple",
+  "usdt":             "tether",
+  "usdc":             "usd-coin",
+  "steth":            "staked-ether",
+  "wbtc":             "wrapped-bitcoin",
+  "weth":             "weth",
+  "dai":              "dai",
+  "shib":             "shiba-inu",
+  "avax":             "avalanche-2",
+  "matic":            "matic-network",
+  "polygon":          "matic-network",
+  "dot":              "polkadot",
+  "uni":              "uniswap",
+  "link":             "chainlink",
+  "atom":             "cosmos",
+  "ltc":              "litecoin",
+  "etc":              "ethereum-classic",
+  "xlm":              "stellar",
+  "near":             "near",
+  "algo":             "algorand",
+  "icp":              "internet-computer",
+  "fil":              "filecoin",
+  "hbar":             "hedera-hashgraph",
+  "vet":              "vechain",
+  "mana":             "decentraland",
+  "sand":             "the-sandbox",
+  "axs":              "axie-infinity",
+  "theta":            "theta-token",
+  "xtz":              "tezos",
+  "eos":              "eos",
+  "cake":             "pancakeswap-token",
+  "aave":             "aave",
+  "grt":              "the-graph",
+  "mkr":              "maker",
+  "comp":             "compound-governance-token",
+  "snx":              "havven",
+  "crv":              "curve-dao-token",
+  "1inch":            "1inch",
+};
+
+export function toCoingeckoSlug(cmcSlug: string): string {
+  return CMC_TO_COINGECKO[cmcSlug.toLowerCase()] ?? cmcSlug;
+}

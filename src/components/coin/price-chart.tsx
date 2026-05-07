@@ -15,11 +15,11 @@ import { formatUSD } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 const RANGES: { label: string; value: ChartRange }[] = [
-  { label: "24J",  value: "1"   },
-  { label: "7H",   value: "7"   },
-  { label: "30H",  value: "30"  },
-  { label: "90H",  value: "90"  },
-  { label: "1T",   value: "365" },
+  { label: "24J", value: "1" },
+  { label: "7H", value: "7" },
+  { label: "30H", value: "30" },
+  { label: "90H", value: "90" },
+  { label: "1T", value: "365" },
 ];
 
 function formatXAxis(time: number, range: ChartRange): string {
@@ -73,8 +73,8 @@ export function PriceChart({ slug, isPositive: positive }: PriceChartProps) {
   }, []);
 
   const strokeColor = positive ? "var(--color-up)" : "var(--color-down)";
-  const gradientId  = `gradient-${slug}`;
-  const tickCount   = range === "1" ? 6 : range === "7" ? 7 : 6;
+  const gradientId = `gradient-${slug}`;
+  const tickCount = range === "1" ? 6 : range === "7" ? 7 : 6;
 
   return (
     <div className="rounded-xl border border-border/50 bg-card p-5 space-y-4 overflow-hidden">
@@ -103,9 +103,10 @@ export function PriceChart({ slug, isPositive: positive }: PriceChartProps) {
       <div className="h-64 w-full min-w-0">
         {!isMounted || isLoading ? (
           <div className="h-full w-full rounded-lg bg-secondary animate-pulse" />
-        ) : isError ? (
-          <div className="h-full w-full flex items-center justify-center text-sm text-muted-foreground">
-            Gagal memuat grafik.
+        ) : !data || data.length === 0 ? (
+          <div className="h-full w-full flex flex-col items-center justify-center gap-2 text-sm text-muted-foreground">
+            <span>Data grafik tidak tersedia</span>
+            <span className="text-xs">Kami tidak memiliki data untuk koin ini</span>
           </div>
         ) : (
           <ResponsiveContainer width="100%" height="100%" minWidth={0}>
@@ -115,8 +116,8 @@ export function PriceChart({ slug, isPositive: positive }: PriceChartProps) {
             >
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%"  stopColor={strokeColor} stopOpacity={0.2} />
-                  <stop offset="95%" stopColor={strokeColor} stopOpacity={0}   />
+                  <stop offset="5%" stopColor={strokeColor} stopOpacity={0.2} />
+                  <stop offset="95%" stopColor={strokeColor} stopOpacity={0} />
                 </linearGradient>
               </defs>
               <XAxis

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { TrendingUp, Star, BarChart2, Menu, X, PieChart } from "lucide-react";
+import { TrendingUp, Star, BarChart2, Menu, X, PieChart, Activity, Newspaper } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/common/search-bar";
@@ -11,8 +11,10 @@ import { CurrencyToggle } from "@/components/common/currency-toggle";
 const navLinks = [
   { href: "/", label: "Market", icon: BarChart2 },
   { href: "/trending", label: "Trending", icon: TrendingUp },
+  { href: "/news", label: "Berita", icon: Newspaper },
+  { href: "/fear-greed", label: "Sentimen", icon: Activity },
   { href: "/watchlist", label: "Watchlist", icon: Star },
-  { href: "/portfolio", label: "Portfolio", icon: PieChart   },
+  { href: "/portfolio", label: "Portfolio", icon: PieChart },
 ];
 
 export function Navbar() {

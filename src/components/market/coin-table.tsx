@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useListings } from "@/lib/hooks/use-listings";
 import { formatPercent, isPositive } from "@/lib/utils";
@@ -9,10 +10,11 @@ import { ChevronUp, ChevronDown, Star } from "lucide-react";
 import { useWatchlistStore } from "@/lib/stores/watchlist";
 import { useCurrency } from "@/lib/hooks/use-currency";
 import { Pagination } from "@/components/common/pagination";
+import { Sparkline } from "@/components/common/sparkline";
 import { Coin } from "@/types/coin";
 
 const PAGE_SIZE = 100;
-const TOTAL_COINS = 500; // tampilkan top 500
+const TOTAL_COINS = 500;
 const TOTAL_PAGES = TOTAL_COINS / PAGE_SIZE;
 
 type SortKey = "cmc_rank" | "price" | "percent_change_24h" | "market_cap" | "volume_24h";
@@ -24,10 +26,12 @@ function PriceChange({ value }: { value: number }) {
     <span
       className={cn(
         "tabular-nums text-sm font-medium",
-        positive ? "text-(--color-up)" : "text-(--color-down)"
+        positive ? "text-[var(--color-up)]" : "text-[var(--color-down)]"
       )}
     >
-      {positive ? <ChevronUp className="inline w-3 h-3" /> : <ChevronDown className="inline w-3 h-3" />}
+      {positive
+        ? <ChevronUp className="inline w-3 h-3" />
+        : <ChevronDown className="inline w-3 h-3" />}
       {formatPercent(value)}
     </span>
   );
@@ -36,7 +40,7 @@ function PriceChange({ value }: { value: number }) {
 function CoinRowSkeleton() {
   return (
     <tr className="border-b border-border/30 animate-pulse">
-      {Array.from({ length: 7 }).map((_, i) => (
+      {Array.from({ length: 8 }).map((_, i) => (
         <td key={i} className="px-4 py-3">
           <div className="h-4 bg-secondary rounded w-full max-w-24" />
         </td>
@@ -74,11 +78,19 @@ function SortButton({
       <span className="flex flex-col">
         <ChevronUp
           size={10}
-          className={cn(active && currentDir === "asc" ? "text-(--color-brand-500)" : "opacity-30")}
+          className={cn(
+            active && currentDir === "asc"
+              ? "text-[var(--color-brand-500)]"
+              : "opacity-30"
+          )}
         />
         <ChevronDown
           size={10}
-          className={cn(active && currentDir === "desc" ? "text-(--color-brand-500)" : "opacity-30")}
+          className={cn(
+            active && currentDir === "desc"
+              ? "text-[var(--color-brand-500)]"
+              : "opacity-30"
+          )}
         />
       </span>
     </button>
@@ -168,14 +180,16 @@ export function CoinTable() {
       </div>
 
       {/* Table */}
-      <div className={cn(
-        "rounded-xl border border-border/50 bg-card overflow-hidden transition-opacity",
-        isFetching && "opacity-70"
-      )}>
+      <div
+        className={cn(
+          "rounded-xl border border-border/50 bg-card overflow-hidden transition-opacity",
+          isFetching && "opacity-70"
+        )}
+      >
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-border/50 bg-secondary/30">
+              <tr className="border-b border-border/50 bg-secondary/30 backdrop-blur-sm">
                 <th className="px-4 py-3 text-left w-8">
                   <SortButton
                     label="#"
@@ -226,13 +240,24 @@ export function CoinTable() {
                     className="ml-auto"
                   />
                 </th>
+                <th className="px-4 py-3 text-right hidden xl:table-cell">
+                  <span className="text-xs font-medium text-muted-foreground">
+                    7 Hari
+                  </span>
+                </th>
                 <th className="px-4 py-3 w-10" />
               </tr>
             </thead>
             <tbody>
               {isLoading
-                ? Array.from({ length: 20 }).map((_, i) => <CoinRowSkeleton key={i} />)
-                : sortedCoins.map((coin: Coin) => (
+                ? Array.from({ length: 20 }).map((_, i) => (
+                  <CoinRowSkeleton key={i} />
+                ))
+                : sortedCoins.map((coin: Coin) => {
+                  const usd = coin.quote.USD;
+                  const positive = isPositive(usd.percent_change_24h);
+
+                  return (
                     <tr
                       key={coin.id}
                       className="border-b border-border/20 hover:bg-secondary/20 transition-colors"
@@ -243,8 +268,15 @@ export function CoinTable() {
                       <td className="px-4 py-3">
                         <Link
                           href={`/coin/${coin.slug}`}
-                          className="flex items-center gap-2 hover:text-(--color-brand-500) transition-colors"
+                          className="flex items-center gap-3 hover:text-[var(--color-brand-500)] transition-colors"
                         >
+                          <Image
+                            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
+                            alt={coin.name}
+                            width={28}
+                            height={28}
+                            className="rounded-full shrink-0"
+                          />
                           <div className="flex flex-col">
                             <span className="font-medium">{coin.name}</span>
                             <span className="text-xs text-muted-foreground uppercase">
@@ -254,16 +286,28 @@ export function CoinTable() {
                         </Link>
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums font-medium">
-                        {formatPrice(coin.quote.USD.price)}
+                        {formatPrice(usd.price)}
                       </td>
                       <td className="px-4 py-3 text-right">
-                        <PriceChange value={coin.quote.USD.percent_change_24h} />
+                        <PriceChange value={usd.percent_change_24h} />
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums text-muted-foreground hidden md:table-cell">
-                        {formatLarge(coin.quote.USD.market_cap)}
+                        {formatLarge(usd.market_cap)}
                       </td>
                       <td className="px-4 py-3 text-right tabular-nums text-muted-foreground hidden lg:table-cell">
-                        {formatLarge(coin.quote.USD.volume_24h)}
+                        {formatLarge(usd.volume_24h)}
+                      </td>
+                      <td className="px-4 py-3 hidden xl:table-cell">
+                        <div className="flex justify-end">
+                          <Sparkline
+                            changes={[
+                              usd.percent_change_1h,
+                              usd.percent_change_24h,
+                              usd.percent_change_7d,
+                            ]}
+                            positive={positive}
+                          />
+                        </div>
                       </td>
                       <td className="px-4 py-3">
                         <button
@@ -283,7 +327,8 @@ export function CoinTable() {
                         </button>
                       </td>
                     </tr>
-                  ))}
+                  );
+                })}
             </tbody>
           </table>
         </div>
