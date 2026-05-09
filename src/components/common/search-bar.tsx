@@ -41,12 +41,12 @@ export function SearchBar() {
   }
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-xs">
+    <div ref={containerRef} className="relative w-[160px] sm:w-[180px]">
       {/* Input */}
-      <div className="relative">
+      <div className="relative group">
         <Search
           size={15}
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-white transition-colors"
         />
         <input
           type="text"
@@ -59,10 +59,9 @@ export function SearchBar() {
           onKeyDown={handleKeyDown}
           placeholder="Cari koin..."
           className={cn(
-            "w-full bg-secondary border border-border/50 rounded-lg",
-            "pl-9 pr-4 py-2 text-sm text-foreground placeholder:text-muted-foreground",
-            "focus:outline-none focus:ring-1 focus:ring-(--color-brand-500) focus:border-(--color-brand-500)",
-            "transition-all"
+            "w-full bg-transparent border border-white/30 rounded-full",
+            "pl-9 pr-4 py-1.5 text-sm text-foreground placeholder:text-muted-foreground/70",
+            "focus:outline-none focus:border-white focus:bg-white/5 transition-all duration-300"
           )}
         />
         {isFetching && (
@@ -75,7 +74,7 @@ export function SearchBar() {
 
       {/* Dropdown */}
       {open && query.length >= 1 && (
-        <div className="absolute top-full mt-1 w-full min-w-70 right-0 z-50 rounded-xl border border-border/50 bg-popover shadow-xl overflow-hidden">
+        <div className="absolute top-full mt-2 left-0 w-full min-w-[240px] z-50 rounded-xl border border-border/50 bg-popover shadow-xl overflow-hidden animate-in fade-in zoom-in-95 duration-100">
           {!results || results.length === 0 ? (
             <div className="px-4 py-6 text-center text-sm text-muted-foreground">
               {isFetching ? "Mencari..." : `Tidak ada hasil untuk "${query}"`}

@@ -2,9 +2,8 @@ import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/layout/providers";
-import { Navbar } from "@/components/layout/navbar";
-import { Footer } from "@/components/layout/footer";
-import { CoinTicker } from "@/components/layout/coin-ticker";
+import { LayoutProvider } from "@/components/layout/layout-provider";
+import { AppLayout } from "@/components/layout/app-layout"; // Import wrapper baru
 
 const inter = Inter({
   variable: "--font-inter",
@@ -18,8 +17,8 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Lacakoin — Pantau Pasar Kripto Indonesia",
-    template: "%s | Lacakoin",
+    default: "LacaX — Pantau Pasar Kripto Indonesia",
+    template: "%s | LacaX",
   },
   description:
     "Platform agregator data kripto dengan nuansa lokal Indonesia. Pantau harga Bitcoin, Ethereum, dan ribuan koin lainnya.",
@@ -54,13 +53,12 @@ export default function RootLayout({
       className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      {/* Ubah body menjadi h-screen dan overflow-hidden */}
+      <body className="h-screen overflow-hidden flex flex-col bg-background text-foreground">
         <Providers>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-
-          <Footer />
-          <CoinTicker />
+          <LayoutProvider>
+            <AppLayout>{children}</AppLayout>
+          </LayoutProvider>
         </Providers>
       </body>
     </html>
