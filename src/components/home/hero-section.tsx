@@ -7,7 +7,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import { Coin } from "@/types/coin";
-import { TrendingUp, Activity, PieChart, Newspaper, ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react"; // Icon lain dihapus karena quicklinks sudah tanpa icon
+
+// Warna Aksen Utama
+const BRAND_COLOR = "#5170ff";
 
 function CoinCard({ coin, index }: { coin: Coin; index: number }) {
     const { formatPrice } = useCurrency();
@@ -17,7 +20,7 @@ function CoinCard({ coin, index }: { coin: Coin; index: number }) {
     return (
         <Link
             href={`/coin/${coin.slug}`}
-            className="flex flex-col gap-3 p-4 rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card hover:border-[var(--color-brand-500)]/40 transition-all group"
+            className="flex flex-col gap-3 p-4 rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm hover:bg-card hover:border-[#5170ff]/40 transition-all group"
             style={{ animation: `fadeSlideUp 0.5s ease ${0.1 + index * 0.07}s both` }}
         >
             <Image
@@ -38,7 +41,7 @@ function CoinCard({ coin, index }: { coin: Coin; index: number }) {
                 <p
                     className={cn(
                         "text-sm font-semibold tabular-nums mt-0.5",
-                        positive ? "text-[var(--color-up)]" : "text-[var(--color-down)]"
+                        positive ? "text-emerald-500" : "text-rose-500"
                     )}
                 >
                     {formatPercent(usd.percent_change_24h)}
@@ -57,11 +60,12 @@ function CoinCardSkeleton({ index }: { index: number }) {
     );
 }
 
+// Quick links tanpa icon, lebih simpel
 const quickLinks = [
-    { href: "/trending", label: "Trending", icon: TrendingUp },
-    { href: "/fear-greed", label: "Sentimen", icon: Activity },
-    { href: "/portfolio", label: "Portfolio", icon: PieChart },
-    { href: "/news", label: "Berita", icon: Newspaper },
+    { href: "/trending", label: "Trending" },
+    { href: "/fear-greed", label: "Sentimen" },
+    { href: "/portfolio", label: "Portfolio" },
+    { href: "/news", label: "Berita" },
 ];
 
 export function HeroSection() {
@@ -71,19 +75,19 @@ export function HeroSection() {
     return (
         <section className="relative overflow-hidden border-b border-border/50">
 
-            {/* Background blobs */}
+            {/* Background blobs with new accent color */}
             <div className="absolute inset-0 pointer-events-none">
                 <div
                     className="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full opacity-10"
                     style={{
-                        background: "radial-gradient(circle, var(--color-brand-500), transparent 70%)",
+                        background: `radial-gradient(circle, ${BRAND_COLOR}, transparent 70%)`,
                         animation: "blob 10s ease-in-out infinite",
                     }}
                 />
                 <div
                     className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-5"
                     style={{
-                        background: "radial-gradient(circle, var(--color-brand-400), transparent 70%)",
+                        background: `radial-gradient(circle, ${BRAND_COLOR}, transparent 70%)`,
                         animation: "blob 14s ease-in-out infinite reverse",
                     }}
                 />
@@ -103,7 +107,7 @@ export function HeroSection() {
                             <h1 className="text-6xl sm:text-7xl font-bold leading-[1.05] tracking-tight">
                                 Pantau kripto.
                                 <br />
-                                <span className="text-[var(--color-brand-500)]">
+                                <span style={{ color: BRAND_COLOR }}>
                                     Rasa lokal.
                                 </span>
                             </h1>
@@ -118,31 +122,33 @@ export function HeroSection() {
                             className="space-y-3"
                             style={{ animation: "fadeSlideUp 0.5s ease 0.15s both" }}
                         >
-                            <div className="flex items-center gap-2 bg-secondary border border-border/50 rounded-2xl px-4 py-1 max-w-md focus-within:ring-1 focus-within:ring-[var(--color-brand-500)] focus-within:border-[var(--color-brand-500)] transition-all">
+                            <div className="flex items-center gap-2 bg-secondary border border-border/50 rounded-2xl px-4 py-1 max-w-md focus-within:ring-1 focus-within:ring-[#5170ff] focus-within:border-[#5170ff] transition-all">
                                 <input
                                     type="email"
                                     placeholder="Masukkan email kamu"
                                     className="flex-1 bg-transparent py-2.5 text-sm placeholder:text-muted-foreground focus:outline-none"
                                 />
-                                <button className="shrink-0 px-4 py-2 rounded-xl bg-[var(--color-brand-500)] text-background text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5">
+                                <button
+                                    className="shrink-0 px-4 py-2 rounded-xl text-white text-sm font-semibold hover:opacity-90 transition-opacity flex items-center gap-1.5"
+                                    style={{ backgroundColor: BRAND_COLOR }}
+                                >
                                     Mulai Gratis
                                     <ArrowUpRight size={14} />
                                 </button>
                             </div>
                         </div>
 
-                        {/* Quick links */}
+                        {/* Quick links (No Icons) */}
                         <div
                             className="flex items-center gap-2 flex-wrap"
                             style={{ animation: "fadeSlideUp 0.5s ease 0.25s both" }}
                         >
-                            {quickLinks.map(({ href, label, icon: Icon }) => (
+                            {quickLinks.map(({ href, label }) => (
                                 <Link
                                     key={href}
                                     href={href}
-                                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-border/50 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+                                    className="inline-flex items-center px-4 py-2 rounded-xl border border-border/50 text-xs font-medium text-muted-foreground hover:text-[#5170ff] hover:border-[#5170ff]/30 hover:bg-[#5170ff]/5 transition-colors"
                                 >
-                                    <Icon size={13} />
                                     {label}
                                 </Link>
                             ))}
