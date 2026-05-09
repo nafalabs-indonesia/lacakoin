@@ -1,35 +1,59 @@
+import { HeroSection } from "@/components/home/hero-section";
 import { MarketStats } from "@/components/market/market-stats";
+import { MarketOverview } from "@/components/home/market-overview";
+import { FeaturedCoins } from "@/components/home/featured-coins";
+import { HomeNews } from "@/components/home/home-news";
 import { CoinTable } from "@/components/market/coin-table";
-import { NewsList } from "@/components/news/news-list";
 import Link from "next/link";
 
 export default function HomePage() {
   return (
-    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold">Pasar Kripto</h1>
-        <p className="text-muted-foreground text-sm mt-1">
-          Data harga real-time dari 100 koin teratas
-        </p>
-      </div>
+    <div className="space-y-0">
+      {/* Hero */}
+      <HeroSection />
 
-      {/* Market Stats */}
-      <MarketStats />
+      {/* Main content */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10 space-y-12">
 
-      {/* Coin Table */}
-      <div>
-        <h2 className="text-lg font-semibold mb-3">Semua Koin</h2>
-        <CoinTable />
-      </div>
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold">Berita Terbaru</h2>
-          <Link href="/news" className="text-xs text-[var(--color-brand-500)] hover:opacity-80">
-            Lihat semua →
-          </Link>
-        </div>
-        <NewsList />
+        {/* Global Stats */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold">Ringkasan Pasar</h2>
+          <MarketStats />
+        </section>
+
+        {/* Market Overview — Popular / Gainers / Volume */}
+        <section className="space-y-4">
+          <h2 className="text-lg font-semibold">Pasar</h2>
+          <MarketOverview />
+        </section>
+
+        {/* Featured Coins — Trending / Gainers / Losers */}
+        <section className="space-y-4">
+          <FeaturedCoins />
+        </section>
+
+        {/* Full Market Table */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Semua Koin</h2>
+          </div>
+          <CoinTable />
+        </section>
+
+        {/* News preview */}
+        <section className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h2 className="text-lg font-semibold">Berita Terbaru</h2>
+            <Link
+              href="/news"
+              className="text-xs text-[var(--color-brand-500)] hover:opacity-80 transition-opacity"
+            >
+              Lihat semua →
+            </Link>
+          </div>
+          <HomeNews />
+        </section>
+
       </div>
     </div>
   );

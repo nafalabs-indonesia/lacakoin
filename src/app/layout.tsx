@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/layout/providers";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { CoinTicker } from "@/components/layout/coin-ticker";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -50,13 +51,16 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${inter.variable} ${jetbrainsMono.variable} dark h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <Providers>
           <Navbar />
           <main className="flex-1">{children}</main>
+
           <Footer />
+          <CoinTicker />
         </Providers>
       </body>
     </html>
