@@ -4,6 +4,8 @@ import { use, useState, useEffect } from "react";
 import { TradingChart } from "@/components/trade/trading-chart";
 import { OrderBook } from "@/components/trade/order-book";
 import { OrderForm } from "@/components/trade/order-form";
+import { OpenOrders } from "@/components/trade/open-orders";
+import { AccountPanel } from "@/components/trade/account-panel";
 import { POPULAR_TOKENS, USDT, SYMBOL_TO_COINGECKO } from "@/lib/dex/tokens";
 import { Token } from "@/types/trade";
 import { ChevronDown, ArrowLeft } from "lucide-react";
@@ -33,7 +35,6 @@ export default function SpotTradePage({
     const coinId = SYMBOL_TO_COINGECKO[baseToken.symbol] ?? baseToken.symbol.toLowerCase();
     const [price, setPrice] = useState<number>(0);
 
-    // Fetch current price for order book seed
     useEffect(() => {
         fetch(`/api/chart/${coinId}?range=1`)
             .then((r) => r.json())
@@ -57,7 +58,6 @@ export default function SpotTradePage({
                         <ArrowLeft size={16} />
                     </Link>
 
-                    {/* Pair selector */}
                     <button className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-colors">
                         <div className="flex -space-x-1.5">
                             <img
@@ -78,10 +78,8 @@ export default function SpotTradePage({
                         <ChevronDown size={13} className="text-gray-500" />
                     </button>
 
-                    {/* Divider */}
                     <div className="w-px h-5 bg-white/10" />
 
-                    {/* Quick pairs */}
                     <div className="flex items-center gap-1 overflow-x-auto">
                         {QUICK_PAIRS.map((pair) => {
                             const [base] = pair.split("-");
@@ -105,41 +103,54 @@ export default function SpotTradePage({
                 </div>
             </div>
 
-            {/* Main layout — 3 kolom */}
-            <div className="mx-auto max-w-[1800px] py-1">
-                {/* 
-                   UPDATE: 
-                   1. Gap dikurangi menjadi gap-2 agar lebih mepet.
-                   2. Chart menggunakan 1fr (maksimal sisa ruang).
-                   3. Order Book & Form diset ke 300px agar chart lebih luas tapi panel kanan tetap usable.
-                */}
-                <div className="grid grid-cols-1 xl:grid-cols-[1fr_310px_310px] gap-1 h-[calc(100vh-8rem)]">
+            {/* Main Layout */}
+            <div className="mx-auto max-w-[1800px] p-1">
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] xl:grid-cols-[1fr_300px_300px] gap-1 min-h-[calc(100vh-4rem)]">
 
-                    {/* Kiri — Chart */}
-                    <div className="min-h-[500px] xl:min-h-0 w-full">
-                        <TradingChart
-                            coinId={coinId}
-                            baseSymbol={baseToken.symbol}
-                            quoteSymbol={quoteToken.symbol}
-                        />
+                    {/* Left Column - Chart + OrderBook + OpenOrders */}
+                    <div className="flex flex-col gap-1 min-h-0 lg:col-span-1 xl:col-span-2">
+                        {/* Top row: Chart + OrderBook side by side */}
+                        <div className="flex flex-col xl:flex-row gap-1 flex-1 min-h-0">
+                            {/* Chart */}
+                            <div className="flex-1 min-h-[400px]">
+                                <TradingChart
+                                    coinId={coinId}
+                                    baseSymbol={baseToken.symbol}
+                                    quoteSymbol={quoteToken.symbol}
+                                />
+                            </div>
+
+                            {/* OrderBook - hidden on mobile, visible xl */}
+                            <div className="hidden xl:block w-[300px]">
+                                <OrderBook
+                                    basePrice={price}
+                                    baseSymbol={baseToken.symbol}
+                                    quoteSymbol={quoteToken.symbol}
+                                />
+                            </div>
+                        </div>
+
+                        {/* Bottom: OpenOrders - full width below Chart+OrderBook */}
+                        <div className="h-[450px]">
+                            <OpenOrders />
+                        </div>
                     </div>
 
-                    {/* Tengah — Order Book */}
-                    <div className="hidden xl:block h-full">
-                        <OrderBook
-                            basePrice={price}
-                            baseSymbol={baseToken.symbol}
-                            quoteSymbol={quoteToken.symbol}
-                        />
-                    </div>
+                    {/* Right Column - OrderForm + AccountPanel */}
+                    <div className="flex flex-col gap-1 min-h-0">
+                        {/* OrderForm */}
+                        <div className="flex-1 min-h-[400px]">
+                            <OrderForm
+                                tokenA={baseToken}
+                                tokenB={quoteToken}
+                                currentPrice={price}
+                            />
+                        </div>
 
-                    {/* Kanan — Order Form */}
-                    <div className="h-full overflow-y-auto">
-                        <OrderForm
-                            tokenA={baseToken}
-                            tokenB={quoteToken}
-                            currentPrice={price}
-                        />
+                        {/* AccountPanel - same height as OpenOrders */}
+                        <div className="h-[450px]">
+                            <AccountPanel />
+                        </div>
                     </div>
 
                 </div>
