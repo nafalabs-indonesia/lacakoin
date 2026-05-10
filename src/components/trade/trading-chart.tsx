@@ -21,7 +21,7 @@ export function TradingChart({ coinId, baseSymbol, quoteSymbol }: TradingChartPr
         if (!coinId) return;
         setIsLoading(true);
 
-        fetch(`/api/chart/${coinId}?range=1`) // 1 day for 24h stats
+        fetch(`/api/chart/${coinId}?range=1`)
             .then((r) => r.json())
             .then((json) => {
                 if (!json.prices?.length) {
@@ -53,40 +53,65 @@ export function TradingChart({ coinId, baseSymbol, quoteSymbol }: TradingChartPr
 
         const symbol = `BINANCE:${baseSymbol}${quoteSymbol}`;
 
+        // Bersihkan container sebelum render ulang
+        containerRef.current.innerHTML = "";
+
         const script = document.createElement("script");
         script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
         script.type = "text/javascript";
         script.async = true;
-        script.innerHTML = JSON.stringify({
+
+        // Konfigurasi Widget
+        const config = {
             autosize: true,
             symbol: symbol,
             timezone: "Etc/UTC",
-            theme: "dark",
+            theme: "dark", // Tetap dark
             style: "1",
             locale: "en",
             enable_publishing: false,
-            backgroundColor: "rgba(13, 14, 20, 1)",
+
+            // KUNCI: Set background color yang SAMA PERSIS dengan parent div
+            backgroundColor: "#0d0e14",
+
+            // Coba paksa warna grid dan pane agar menyatu
+            gridColor: "#0d0e14", // Membuat grid hampir tak terlihat atau sama dengan bg
+
             hide_top_toolbar: false,
             hide_legend: false,
             save_image: true,
             calendar: false,
             hide_volume: false,
             support_host: "https://www.tradingview.com",
+
+            // Fitur yang dinonaktifkan untuk kebersihan
             disabled_features: [
                 "header_symbol_search",
                 "header_compare",
                 "header_undo_redo",
                 "header_screenshot",
                 "header_fullscreen_button",
+                // Nonaktifkan properti grid default jika menyebabkan warna beda
                 "paneProperties.vertGridProperties",
                 "paneProperties.horzGridProperties",
             ],
             enabled_features: [
                 "use_localstorage_for_settings",
             ],
-        });
+            // Overrides untuk memastikan warna background pane (area chart) sama
+            overrides: {
+                "paneProperties.background": "#0d0e14",
+                "paneProperties.vertGridProperties.color": "rgba(255, 255, 255, 0.06)", // Grid halus
+                "paneProperties.horzGridProperties.color": "rgba(255, 255, 255, 0.06)",
+                "mainSeriesProperties.candleStyle.wickUpColor": "#26a69a",
+                "mainSeriesProperties.candleStyle.wickDownColor": "#ef5350",
+                "mainSeriesProperties.candleStyle.upColor": "#26a69a",
+                "mainSeriesProperties.candleStyle.downColor": "#ef5350",
+            }
+        };
 
-        containerRef.current.innerHTML = "";
+        script.innerHTML = JSON.stringify(config);
+
         containerRef.current.appendChild(script);
         setIsLoading(false);
 
@@ -100,9 +125,12 @@ export function TradingChart({ coinId, baseSymbol, quoteSymbol }: TradingChartPr
     const positive = (change ?? 0) >= 0;
 
     return (
-        <div className="flex flex-col h-full bg-[#0d0e14] overflow-hidden">
-            {/* Pair header bar - seamless dengan tema, tanpa border */}
-            <div className="flex items-center gap-6 px-4 py-3 flex-wrap gap-y-2">
+        <div className="flex flex-col h-full bg-[#0d0e14] overflow-hidden border border-white/5">
+            {/* 
+                Header Bar Custom 
+                Background #0d0e14 sama persis dengan config widget
+            */}
+            <div className="flex items-center gap-6 px-4 py-3 flex-wrap gap-y-2 bg-[#0d0e14] z-10 relative border-b border-white/5">
                 <div className="flex items-center gap-2 shrink-0">
                     <span className="font-bold text-white text-base">
                         {baseSymbol}
@@ -147,10 +175,10 @@ export function TradingChart({ coinId, baseSymbol, quoteSymbol }: TradingChartPr
                 </div>
             </div>
 
-            {/* Chart area - TradingView Widget */}
-            <div className="relative flex-1 min-h-[420px]">
+            {/* Chart area */}
+            <div className="relative flex-1 min-h-[420px] bg-[#0d0e14]">
                 {isLoading && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-[#0d0e14] z-10">
+                    <div className="absolute inset-0 flex items-center justify-center bg-[#0d0e14] z-20">
                         <div className="w-7 h-7 border-2 border-[#5170ff] border-t-transparent rounded-full animate-spin" />
                     </div>
                 )}
