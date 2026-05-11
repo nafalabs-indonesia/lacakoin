@@ -109,8 +109,10 @@ export default function SpotTradePage({
 
                     {/* Left Column - Chart + OrderBook + OpenOrders */}
                     <div className="flex flex-col gap-1 min-h-0 lg:col-span-1 xl:col-span-2">
+
                         {/* Top row: Chart + OrderBook side by side */}
                         <div className="flex flex-col xl:flex-row gap-1 flex-1 min-h-0">
+
                             {/* Chart */}
                             <div className="flex-1 min-h-[400px]">
                                 <TradingChart
@@ -120,17 +122,18 @@ export default function SpotTradePage({
                                 />
                             </div>
 
-                            {/* OrderBook - hidden on mobile, visible xl */}
-                            <div className="hidden xl:block w-[300px]">
+                            {/* OrderBook - now visible on mobile */}
+                            <div className="w-full xl:w-[300px]">
                                 <OrderBook
                                     basePrice={price}
                                     baseSymbol={baseToken.symbol}
                                     quoteSymbol={quoteToken.symbol}
                                 />
                             </div>
+
                         </div>
 
-                        {/* Bottom: OpenOrders - full width below Chart+OrderBook */}
+                        {/* Bottom: OpenOrders */}
                         <div className="h-[450px]">
                             <OpenOrders />
                         </div>
@@ -138,6 +141,7 @@ export default function SpotTradePage({
 
                     {/* Right Column - OrderForm + AccountPanel */}
                     <div className="flex flex-col gap-1 min-h-0">
+
                         {/* OrderForm */}
                         <div className="flex-1 min-h-[400px]">
                             <OrderForm
@@ -147,10 +151,11 @@ export default function SpotTradePage({
                             />
                         </div>
 
-                        {/* AccountPanel - same height as OpenOrders */}
+                        {/* AccountPanel */}
                         <div className="h-[450px]">
                             <AccountPanel />
                         </div>
+
                     </div>
 
                 </div>
