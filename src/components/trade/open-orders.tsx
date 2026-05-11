@@ -30,9 +30,9 @@ export function OpenOrders() {
     // Not connected state
     if (!isConnected) {
         return (
-            <div className="flex flex-col h-full bg-[#0d0e14] text-gray-400">
+            <div className="flex flex-col h-full bg-[#0d0e14] text-gray-400 border border-white/25">
                 {/* Header Tabs */}
-                <div className="flex items-center gap-1 px-3 py-2 border-b border-white/5">
+                <div className="flex items-center gap-1 px-3 py-2">
                     {tabs.map((tab) => (
                         <button
                             key={tab.id}
@@ -62,9 +62,9 @@ export function OpenOrders() {
 
     // Connected state
     return (
-        <div className="flex flex-col h-full bg-[#0d0e14] text-gray-400">
+        <div className="flex flex-col h-full bg-[#0d0e14] text-gray-400 border border-white/25">
             {/* Header Tabs */}
-            <div className="flex items-center gap-1 px-3 py-2 border-b border-white/5">
+            <div className="flex items-center gap-1 px-3 py-2">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}

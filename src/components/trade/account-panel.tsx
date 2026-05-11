@@ -27,7 +27,7 @@ export function AccountPanel({ onClose }: { onClose?: () => void }) {
 
     if (!isConnected) {
         return (
-            <div className="flex flex-col h-full w-full bg-[#0d0e14] text-gray-400 items-center justify-center gap-3">
+            <div className="flex flex-col h-full w-full bg-[#0d0e14] text-gray-400 items-center justify-center gap-3 border border-white/25">
                 <Wallet size={20} className="text-[#5170ff]" />
                 <p className="text-xs text-gray-500">Connect wallet to view account</p>
             </div>
@@ -35,10 +35,10 @@ export function AccountPanel({ onClose }: { onClose?: () => void }) {
     }
 
     return (
-        <div className="flex flex-col h-full w-full bg-[#0d0e14] text-gray-300">
+        <div className="flex flex-col h-full w-full bg-[#0d0e14] text-gray-300 border border-white/25">
 
             {/* Header */}
-            <div className="flex items-center justify-between px-3 py-2 border-b border-white/5">
+            <div className="flex items-center justify-between px-3 py-2">
                 <span className="text-xs font-medium text-white">Account</span>
                 {onClose && (
                     <button

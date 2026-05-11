@@ -130,7 +130,7 @@ export function TradingChart({ coinId, baseSymbol, quoteSymbol }: TradingChartPr
                 Header Bar Custom 
                 Background #0d0e14 sama persis dengan config widget
             */}
-            <div className="flex items-center gap-6 px-4 py-3 flex-wrap gap-y-2 bg-[#0d0e14] z-10 relative border-b border-white/5">
+            <div className="flex items-center gap-6 px-4 py-3 flex-wrap gap-y-2 bg-[#0d0e14] z-10 relative border border-white/25">
                 <div className="flex items-center gap-2 shrink-0">
                     <span className="font-bold text-white text-base">
                         {baseSymbol}

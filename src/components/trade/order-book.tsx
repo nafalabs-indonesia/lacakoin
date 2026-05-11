@@ -120,7 +120,7 @@ export function OrderBook({
     };
 
     return (
-        <div className="relative flex flex-col h-full bg-[#0d0e14] border border-white/5 overflow-hidden font-sans">
+        <div className="relative flex flex-col h-full bg-[#0d0e14] border border-white/25 overflow-hidden font-sans">
 
             {/* Tooltip */}
             {hoveredOrder && (

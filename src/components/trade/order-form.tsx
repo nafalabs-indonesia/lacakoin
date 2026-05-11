@@ -553,7 +553,7 @@ export function OrderForm({
     }
 
     return (
-        <div className="flex flex-col bg-[#0d0e14] border border-white/5 overflow-hidden">
+        <div className="flex flex-col bg-[#0d0e14] border border-white/25 overflow-hidden">
             {/* HEADER */}
             <div className="flex items-center justify-between px-4 pt-3 pb-0 border-b border-white/5">
                 <div className="flex gap-0">
