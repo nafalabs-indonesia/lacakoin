@@ -591,7 +591,7 @@ export function OrderForm({
                             !showSettings
                         )
                     }
-                    className="p-1.5 rounded text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors mb-1"
+                    className="p-1.5 text-gray-600 hover:text-gray-300 hover:bg-white/5 transition-colors mb-1"
                 >
                     <Settings2 size={15} />
                 </button>
@@ -600,7 +600,7 @@ export function OrderForm({
             <div className="p-4 space-y-3">
                 {/* SETTINGS */}
                 {showSettings && (
-                    <div className="p-3 rounded-lg bg-white/3 border border-white/5 space-y-2">
+                    <div className="p-3 bg-white/3 border border-white/5 space-y-2">
                         <p className="text-[10px] text-gray-500 font-medium uppercase tracking-wider">
                             Slippage Tolerance
                         </p>
@@ -620,7 +620,7 @@ export function OrderForm({
                                             )
                                         }
                                         className={cn(
-                                            "px-2.5 py-1 rounded text-xs font-medium transition-colors",
+                                            "px-2.5 py-1 text-xs font-medium transition-colors",
                                             slippage ===
                                                 s
                                                 ? "bg-[#5170ff] text-white"
@@ -636,7 +636,7 @@ export function OrderForm({
                 )}
 
                 {/* BUY SELL */}
-                <div className="flex rounded-lg overflow-hidden border border-white/10">
+                <div className="flex overflow-hidden border border-white/10">
                     <button
                         onClick={() =>
                             setOrderSide(
@@ -679,7 +679,7 @@ export function OrderForm({
                             Harga Limit
                         </label>
 
-                        <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-white/3 border border-white/10">
+                        <div className="flex items-center gap-2 px-3 py-2.5 bg-white/3 border border-white/10">
                             <input
                                 type="number"
                                 value={
@@ -725,7 +725,7 @@ export function OrderForm({
                         </span>
                     </div>
 
-                    <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-white/3 border border-white/10">
+                    <div className="flex items-center gap-2 px-3 py-2.5 bg-white/3 border border-white/10">
                         <input
                             type="number"
                             value={
@@ -752,14 +752,14 @@ export function OrderForm({
                                 alt={
                                     sellToken.symbol
                                 }
-                                className="w-4 h-4 rounded-full"
+                                className="w-4 h-4"
                             />
 
-                            <span className="text-xs font-semibold text-gray-300">
+                            {/* <span className="text-xs font-semibold text-gray-300">
                                 {
                                     sellToken.symbol
                                 }
-                            </span>
+                            </span> */}
                         </div>
                     </div>
 
@@ -778,7 +778,7 @@ export function OrderForm({
                                             pct
                                         )
                                     }
-                                    className="flex-1 py-1 rounded text-[10px] font-medium text-gray-500 bg-white/3 hover:bg-white/8 hover:text-gray-300 transition-colors"
+                                    className="flex-1 py-1 text-[10px] font-medium text-gray-500 bg-white/3 hover:bg-white/8 hover:text-gray-300 transition-colors"
                                 >
                                     {pct}%
                                 </button>
@@ -798,7 +798,7 @@ export function OrderForm({
                                     : "buy"
                             )
                         }
-                        className="p-1.5 rounded-full bg-white/5 hover:bg-white/10 transition-colors"
+                        className="p-1.5 bg-white/5 hover:bg-white/10 transition-colors"
                     >
                         <ArrowUpDown
                             size={13}
@@ -813,7 +813,7 @@ export function OrderForm({
                         Kamu Terima
                     </label>
 
-                    <div className="flex items-center gap-2 px-3 py-2.5 rounded-lg bg-white/2 border border-white/5">
+                    <div className="flex items-center gap-2 px-3 py-2.5 bg-white/2 border border-white/5">
                         <div className="flex-1 text-sm font-medium tabular-nums text-gray-300">
                             {isQuoting ? (
                                 <Loader2
@@ -836,7 +836,7 @@ export function OrderForm({
                                 alt={
                                     buyToken.symbol
                                 }
-                                className="w-4 h-4 rounded-full"
+                                className="w-4 h-4"
                             />
 
                             <span className="text-xs font-semibold text-gray-300">
@@ -901,7 +901,7 @@ export function OrderForm({
 
                 {/* ERROR */}
                 {error && (
-                    <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 border border-red-500/20 text-xs text-red-400">
+                    <div className="flex items-center gap-2 px-3 py-2 bg-red-500/10 border border-red-500/20 text-xs text-red-400">
                         <AlertCircle
                             size={13}
                         />
@@ -922,7 +922,7 @@ export function OrderForm({
                             isQuoting
                         }
                         className={cn(
-                            "w-full py-3 rounded-xl text-sm font-bold transition-all",
+                            "w-full py-3 text-sm font-bold transition-all",
                             orderSide ===
                                 "buy"
                                 ? "bg-green-500 hover:bg-green-600 text-white"
@@ -952,7 +952,7 @@ export function OrderForm({
                 ) : (
                     <button
                         disabled
-                        className="w-full py-3 rounded-xl text-sm font-bold bg-[#5170ff]/20 text-[#5170ff] border border-[#5170ff]/20 cursor-not-allowed"
+                        className="w-full py-3 text-sm font-bold bg-[#5170ff]/20 text-[#5170ff] border border-[#5170ff]/20 cursor-not-allowed"
                     >
                         Connect Wallet
                     </button>

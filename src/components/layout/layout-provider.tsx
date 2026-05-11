@@ -19,11 +19,9 @@ export function LayoutProvider({ children }: { children: React.ReactNode }) {
     const [isNavbarVisible, setIsNavbarVisible] = useState(true);
 
     useEffect(() => {
-        // Sembunyikan Footer jika path mengandung '/trade'
-        const shouldHideFooter = pathname.startsWith("/trade");
-        setIsFooterVisible(!shouldHideFooter);
-
-        // Navbar tetap visible (atau ubah false jika ingin full screen total)
+        // Sembunyikan footer di halaman trade
+        const isTradePage = pathname.startsWith("/trade");
+        setIsFooterVisible(!isTradePage);
         setIsNavbarVisible(true);
     }, [pathname]);
 

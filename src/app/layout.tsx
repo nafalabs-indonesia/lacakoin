@@ -3,7 +3,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/layout/providers";
 import { LayoutProvider } from "@/components/layout/layout-provider";
-import { AppLayout } from "@/components/layout/app-layout"; // Import wrapper baru
+import { AppLayout } from "@/components/layout/app-layout";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -50,10 +50,9 @@ export default function RootLayout({
   return (
     <html
       lang="id"
-      className={`${inter.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
       suppressHydrationWarning
     >
-      {/* Ubah body menjadi h-screen dan overflow-hidden */}
       <body className="h-screen overflow-hidden flex flex-col bg-background text-foreground">
         <Providers>
           <LayoutProvider>

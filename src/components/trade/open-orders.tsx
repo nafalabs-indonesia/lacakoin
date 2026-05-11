@@ -51,18 +51,10 @@ export function OpenOrders() {
 
                 {/* Connect Wallet Prompt */}
                 <div className="flex-1 flex flex-col items-center justify-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-[#5170ff]/10 flex items-center justify-center">
-                        <Wallet size={20} className="text-[#5170ff]" />
-                    </div>
+                    <Wallet size={20} className="text-[#5170ff]" />
                     <p className="text-sm text-gray-500">
                         Connect wallet to view orders
                     </p>
-                    <button
-                        onClick={handleConnect}
-                        className="px-4 py-1.5 bg-[#5170ff] hover:bg-[#405bd9] text-white text-xs font-medium rounded transition-colors"
-                    >
-                        Connect Wallet
-                    </button>
                 </div>
             </div>
         );

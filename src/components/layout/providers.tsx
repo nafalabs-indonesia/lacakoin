@@ -5,10 +5,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "next-themes";
 import { useState } from "react";
 import { useExchangeRate } from "@/lib/hooks/use-exchange-rate";
-
-// --- Import Wagmi ---
 import { WagmiProvider } from "wagmi";
-import { config } from "@/lib/wagmi"; // Pastikan path ini sesuai dengan lokasi file config wagmi kamu
+import { config } from "@/lib/wagmi";
 
 function RateInitializer() {
   useExchangeRate();
@@ -31,8 +29,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    // 1. WagmiProvider harus di paling luar (atau di dalam ThemeProvider, urutan tidak terlalu krusial 
-    //    asalkan Navbar berada di dalamnya). Biasanya Wagmi di luar QueryClient.
     <WagmiProvider config={config}>
       <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
         <QueryClientProvider client={queryClient}>

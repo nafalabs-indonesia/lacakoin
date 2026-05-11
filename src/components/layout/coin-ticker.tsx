@@ -65,7 +65,9 @@ export function CoinTicker() {
     const coins = data?.data ?? [];
 
     return (
-        <div className="sticky bottom-0 z-40 border-t border-border/50 bg-background/95 backdrop-blur-sm overflow-hidden">
+        // Hapus sticky bottom-0 di sini karena sudah diatur oleh parent AppLayout
+        // Ticker ini hanya perlu border dan background
+        <div className="border-t border-border/50 bg-background/95 backdrop-blur-sm overflow-hidden">
             {isLoading ? (
                 <div className="py-1">
                     <TickerSkeleton />

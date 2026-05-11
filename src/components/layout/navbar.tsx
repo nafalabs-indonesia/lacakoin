@@ -10,14 +10,16 @@ import {
   Wallet,
   Loader2,
   LogOut,
-  CheckCircle2,
 } from "lucide-react";
 import { useState, useEffect } from "react";
-import { createPortal } from "react-dom"; // Import createPortal
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 import { SearchBar } from "@/components/common/search-bar";
-
 import { useAccount, useConnect, useDisconnect } from 'wagmi';
+
+// ==========================================
+// DEFINISI INTERFACE & DATA (JANGAN DIHAPUS)
+// ==========================================
 
 interface NavItem {
   label: string;
@@ -52,23 +54,29 @@ const navItems: NavItem[] = [
   },
 ];
 
+// ==========================================
+// COMPONENT UTAMA
+// ==========================================
+
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-
-  // State untuk modal wallet tengah
   const [isWalletModalOpen, setIsWalletModalOpen] = useState(false);
+
+  // Mount detection untuk avoid hydration mismatch
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { address, isConnected, isConnecting } = useAccount();
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
 
-  // Close dropdowns when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
-      // Logic untuk menutup dropdown navigasi
       if (!target.closest('.group')) {
         setActiveDropdown(null);
       }
@@ -82,15 +90,108 @@ export function Navbar() {
     return `${addr.slice(0, 6)}...${addr.slice(-4)}`;
   };
 
+  // Wallet button component yang aman dari hydration
+  const WalletButton = () => {
+    if (!mounted) {
+      return (
+        <button
+          disabled
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all border min-w-[140px] justify-center bg-secondary text-muted-foreground border-border cursor-not-allowed"
+        >
+          <Wallet size={16} />
+          <span>Connect Wallet</span>
+        </button>
+      );
+    }
+
+    if (isConnected && address) {
+      return (
+        <button
+          onClick={() => disconnect()}
+          className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#5170ff]/50 bg-background/50 hover:bg-[#5170ff]/10 transition-all duration-300 group"
+        >
+          <div className="w-2 h-2 rounded-full bg-[#5170ff] animate-pulse"></div>
+          <span className="text-sm font-semibold font-mono text-gray-200 group-hover:text-white">
+            {formatAddress(address)}
+          </span>
+          <LogOut size={14} className="text-gray-400 group-hover:text-[#5170ff] transition-colors" />
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={() => setIsWalletModalOpen(true)}
+        disabled={isConnecting}
+        className={cn(
+          "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border min-w-[140px] justify-center",
+          isConnecting
+            ? "bg-secondary text-muted-foreground border-border cursor-not-allowed"
+            : "bg-[#5170ff] text-white border-[#5170ff] hover:bg-[#4059cc] hover:border-[#4059cc]"
+        )}
+      >
+        {isConnecting ? (
+          <>
+            <Loader2 size={16} className="animate-spin" />
+            <span>Connecting...</span>
+          </>
+        ) : (
+          <>
+            <Wallet size={16} />
+            <span>Connect Wallet</span>
+          </>
+        )}
+      </button>
+    );
+  };
+
+  // Mobile wallet button yang sama
+  const MobileWalletButton = () => {
+    if (!mounted) {
+      return (
+        <button
+          disabled
+          className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all border bg-secondary text-muted-foreground border-border"
+        >
+          <Wallet size={16} />
+          <span>Connect Wallet</span>
+        </button>
+      );
+    }
+
+    if (isConnected && address) {
+      return (
+        <div className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-background border border-[#5170ff]/50 text-gray-200">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full bg-[#5170ff]"></div>
+            <span className="text-sm font-semibold font-mono">{formatAddress(address)}</span>
+          </div>
+          <button onClick={() => disconnect()} className="p-1 hover:bg-secondary/50 rounded-full text-muted-foreground">
+            <LogOut size={16} />
+          </button>
+        </div>
+      );
+    }
+
+    return (
+      <button
+        onClick={() => setIsWalletModalOpen(true)}
+        disabled={isConnecting}
+        className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all border bg-[#5170ff] text-white border-[#5170ff] disabled:opacity-50"
+      >
+        <Wallet size={16} />
+        <span>Connect Wallet</span>
+        {isConnecting && <Loader2 size={14} className="animate-spin" />}
+      </button>
+    );
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/10 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      {/* Container full width */}
       <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
-
-          {/* KIRI: Logo dan Nav Menu Mepet Kiri */}
+          {/* KIRI: Logo dan Nav */}
           <div className="flex items-center gap-6 md:gap-8">
-            {/* Logo */}
             <Link href="/" className="flex items-center shrink-0 hover:opacity-80 transition-opacity">
               <div className="relative h-10 w-24 sm:w-28">
                 <Image
@@ -110,12 +211,11 @@ export function Navbar() {
               </div>
             </Link>
 
-            {/* Desktop Nav */}
             <nav className="hidden md:flex items-center gap-6">
-              {navItems.map((item) => {
+              {navItems.map((item: NavItem) => {
                 const hasDropdown = !!item.children;
                 const isActive = item.href ? pathname === item.href : false;
-                const isAnyChildActive = item.children?.some(c => c.href === pathname);
+                const isAnyChildActive = item.children?.some((c: NavItem) => c.href === pathname);
                 const isCurrentContext = isActive || isAnyChildActive || activeDropdown === item.label;
 
                 const textColorClass = isCurrentContext
@@ -165,10 +265,9 @@ export function Navbar() {
                       ) : null
                     )}
 
-                    {/* Dropdown */}
                     {hasDropdown && activeDropdown === item.label && (
                       <div className="absolute top-full left-0 mt-2 w-52 p-1.5 bg-popover border border-border/50 rounded-lg shadow-xl animate-in fade-in zoom-in-95 duration-100 origin-top-left z-40">
-                        {item.children?.map((child) => (
+                        {item.children?.map((child: NavItem) => (
                           <Link
                             key={child.href}
                             href={child.href!}
@@ -200,57 +299,18 @@ export function Navbar() {
             </nav>
           </div>
 
-          {/* KANAN: Search dan Connect Wallet Mepet Kanan */}
+          {/* KANAN: Search dan Wallet */}
           <div className="flex items-center gap-2 sm:gap-4 ml-auto">
-
-            {/* Desktop Tools */}
             <div className="hidden md:flex items-center gap-3">
               <div className="w-[200px]">
                 <SearchBar />
               </div>
             </div>
 
-            {/* Connect Wallet Button Trigger */}
             <div className="hidden sm:block relative">
-              {isConnected && address ? (
-                // Tampilan ketika Connected: Border Biru, BG Transparan/Header match
-                <button
-                  onClick={() => disconnect()}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full border border-[#5170ff]/50 bg-background/50 hover:bg-[#5170ff]/10 transition-all duration-300 group"
-                >
-                  <div className="w-2 h-2 rounded-full bg-[#5170ff] animate-pulse"></div>
-                  <span className="text-sm font-semibold font-mono text-gray-200 group-hover:text-white">
-                    {formatAddress(address)}
-                  </span>
-                  <LogOut size={14} className="text-gray-400 group-hover:text-[#5170ff] transition-colors" />
-                </button>
-              ) : (
-                <button
-                  onClick={() => setIsWalletModalOpen(true)}
-                  disabled={isConnecting}
-                  className={cn(
-                    "flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-all duration-300 border min-w-[140px] justify-center",
-                    isConnecting
-                      ? "bg-secondary text-muted-foreground border-border cursor-not-allowed"
-                      : "bg-[#5170ff] text-white border-[#5170ff] hover:bg-[#4059cc] hover:border-[#4059cc]"
-                  )}
-                >
-                  {isConnecting ? (
-                    <>
-                      <Loader2 size={16} className="animate-spin" />
-                      <span>Connecting...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Wallet size={16} />
-                      <span>Connect Wallet</span>
-                    </>
-                  )}
-                </button>
-              )}
+              <WalletButton />
             </div>
 
-            {/* Mobile Toggle */}
             <button
               className="md:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-secondary/10 transition-colors"
               onClick={() => setMobileOpen((prev) => !prev)}
@@ -269,31 +329,11 @@ export function Navbar() {
             <SearchBar />
 
             <div className="mb-2 space-y-2">
-              {isConnected && address ? (
-                <div className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-background border border-[#5170ff]/50 text-gray-200">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#5170ff]"></div>
-                    <span className="text-sm font-semibold font-mono">{formatAddress(address)}</span>
-                  </div>
-                  <button onClick={() => disconnect()} className="p-1 hover:bg-secondary/50 rounded-full text-muted-foreground">
-                    <LogOut size={16} />
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={() => setIsWalletModalOpen(true)}
-                  disabled={isConnecting}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-semibold transition-all border bg-[#5170ff] text-white border-[#5170ff] disabled:opacity-50"
-                >
-                  <Wallet size={16} />
-                  <span>Connect Wallet</span>
-                  {isConnecting && <Loader2 size={14} className="animate-spin" />}
-                </button>
-              )}
+              <MobileWalletButton />
             </div>
 
             <div className="space-y-1 pt-2">
-              {navItems.map((item) => {
+              {navItems.map((item: NavItem) => {
                 const hasDropdown = !!item.children;
                 return (
                   <div key={item.label}>
@@ -308,7 +348,7 @@ export function Navbar() {
                           )}
                         </div>
                         <div className="pl-4 space-y-1 border-l-2 border-border/50 ml-3">
-                          {item.children?.map((child) => (
+                          {item.children?.map((child: NavItem) => (
                             <Link
                               key={child.href}
                               href={child.href!}
@@ -363,16 +403,13 @@ export function Navbar() {
         </div>
       )}
 
-      {/* MODAL WALLET MENGGUNAKAN PORTAL AGAR BENAR-BENAR DI TENGAH LAYAR */}
+      {/* Wallet Modal */}
       {isWalletModalOpen && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
-          {/* Backdrop */}
           <div
             className="absolute inset-0 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
             onClick={() => setIsWalletModalOpen(false)}
           />
-
-          {/* Modal Content */}
           <div className="relative w-full max-w-md bg-popover border border-border/50 rounded-2xl shadow-2xl p-6 animate-in zoom-in-95 duration-200">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-lg font-semibold text-foreground">Connect Wallet</h3>
