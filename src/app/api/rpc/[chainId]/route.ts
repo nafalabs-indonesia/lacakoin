@@ -9,10 +9,11 @@ const RPC_URL_MAP: Record<string, string> = {
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { chainId: string } }
+  { params }: { params: Promise<{ chainId: string }> } // <-- Perhatikan: params adalah Promise
 ) {
   try {
-    const { chainId } = params;
+    // Await params untuk mendapatkan nilai chainId
+    const { chainId } = await params;
     
     // Validasi chainId
     if (!RPC_URL_MAP[chainId]) {
@@ -23,9 +24,11 @@ export async function POST(
     }
 
     const targetRpcUrl = RPC_URL_MAP[chainId];
-    const body = await req.text(); // Ambil body mentah untuk diteruskan apa adanya
+    
+    // Ambil body request dari mobile app
+    const body = await req.text(); 
 
-    // Headers untuk menipu Cloudflare
+    // Headers untuk menipu Cloudflare agar mengira ini request browser biasa
     const headers = {
       'Content-Type': 'application/json',
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -33,7 +36,7 @@ export async function POST(
       'Referer': 'https://bdagscan.com/',
     };
 
-    // Forward request ke RPC asli
+    // Forward request ke RPC asli BlockDAG
     const response = await fetch(targetRpcUrl, {
       method: 'POST',
       headers: headers,
@@ -42,6 +45,7 @@ export async function POST(
     });
 
     if (!response.ok) {
+      // Jika RPC asli mengembalikan error, forward status codenya
       throw new Error(`RPC Error: ${response.status}`);
     }
 
